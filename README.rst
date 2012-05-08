@@ -20,7 +20,8 @@ To view a demo, run these commands::
 
     git clone git://github.com/david-e/django-elfinder.git (fork of mikery/django-elfinder)
     cd django-elfinder/test_project
-    ./manage.py loaddata ../elfinder/fixtures/testdata.json
+    ./manage.py syncdb
+    ./manage.py loaddata fixtures/testdata.json
     ./manage.py runserver
 
 Then browse to http://127.0.0.1:8080/elfinder/1/.
