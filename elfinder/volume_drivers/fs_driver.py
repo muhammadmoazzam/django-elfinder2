@@ -241,15 +241,17 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
 
     def get_tree(self, target, ancestors=False, siblings=False):
         path = self._find_path(target)
-        tree = [self._get_path_info(safe_join(self.root, path, child)) for child in os.listdir(path)]
+
+        tree = [self._get_path_info(path)]
+        tree.extend([self._get_path_info(safe_join(self.root, path, child)) for child in os.listdir(path)])
 
         if ancestors:
             proc_path = path
             while proc_path != self.root:
                 tree.append(self._get_path_info(proc_path))
-                proc_dir, head = os.path.split(proc_path)
-                for ancestor_sibling in os.listdir(proc_dir):
-                    ancestor_sibling_abs = safe_join(self.root, proc_dir, ancestor_sibling)
+                proc_path, head = os.path.split(proc_path)
+                for ancestor_sibling in os.listdir(proc_path):
+                    ancestor_sibling_abs = safe_join(self.root, proc_path, ancestor_sibling)
                     if os.path.isdir(ancestor_sibling_abs):
                         tree.append(self._get_path_info(ancestor_sibling_abs))
 
@@ -260,7 +262,12 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
                     continue
                 sibling_abs = safe_join(self.root, parent_path, sibling)
                 tree.append(self._get_path_info(sibling_abs))
-
+        # print
+        # print "*******************************************"
+        # print
+        # for t in tree:
+        #     print t
+        # print
         return tree
 
     def read_file_view(self, request, hash):
