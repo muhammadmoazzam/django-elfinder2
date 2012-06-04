@@ -5,26 +5,28 @@ from django.utils import simplejson as json
 from django.template import RequestContext
 from elfinder.connector import ElFinderConnector
 from elfinder.models import FileCollection
-from elfinder.volume_drivers.model_driver import ModelVolumeDriver
+# from elfinder.volume_drivers.model_driver import ModelVolumeDriver
+from elfinder.volume_drivers import get_volume_driver
 
 
-def index(request, coll_id):
+def index(request, coll_id=None):
     """ Displays the elFinder file browser template for the specified
-        FileCollection.
+        collection.
     """
-    collection = FileCollection.objects.get(pk=coll_id)
+    # collection = FileCollection.objects.get(pk=coll_id)
     return render_to_response("elfinder.html",
-                              {'coll_id': collection.id},
+                              {'coll_id': coll_id},
                               RequestContext(request))
 
 
-def connector_view(request, coll_id):
+def connector_view(request, coll_id=None):
     """ Handles requests for the elFinder connector.
     """
 
-    model_volume = ModelVolumeDriver(coll_id)
+    # model_volume = ModelVolumeDriver(coll_id)
+    volume = get_volume_driver()(collection_id=coll_id)
 
-    finder = ElFinderConnector([model_volume])
+    finder = ElFinderConnector([volume])
     finder.run(request)
 
     # Some commands (e.g. read file) will return a Django View - if it

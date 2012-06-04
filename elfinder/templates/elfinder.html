@@ -3,9 +3,9 @@
   <body>
     {% block includes %}
     <link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css" />
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script> 
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-   
+
     <link rel="stylesheet" type="text/css" media="screen" href="{% static "elfinder/css/common.css" %}">
     <link rel="stylesheet" href="{% static "elfinder/css/common.css" %}"      type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="{% static "elfinder/css/dialog.css" %}"      type="text/css" media="screen" charset="utf-8">
@@ -75,8 +75,8 @@
 	<script src="{% static "elfinder/js/commands/search.js" %}"    type="text/javascript" charset="utf-8"></script>
 	<script src="{% static "elfinder/js/commands/view.js" %}"      type="text/javascript" charset="utf-8"></script>
 	<script src="{% static "elfinder/js/commands/resize.js" %}"    type="text/javascript" charset="utf-8"></script>
-	<script src="{% static "elfinder/js/commands/sort.js" %}"      type="text/javascript" charset="utf-8"></script>	
-	<script src="{% static "elfinder/js/commands/netmount.js" %}"      type="text/javascript" charset="utf-8"></script>	
+	<script src="{% static "elfinder/js/commands/sort.js" %}"      type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "elfinder/js/commands/netmount.js" %}"      type="text/javascript" charset="utf-8"></script>
 
 	<!-- elfinder languages -->
 	<script src="{% static "elfinder/js/i18n/elfinder.ar.js" %}"    type="text/javascript" charset="utf-8"></script>
@@ -110,13 +110,13 @@
     <script type="text/javascript" charset="utf-8">
         $().ready(function() {
         var elf = $('#elfinder').elfinder({
-            url : '{% url elfinder_connector coll_id %}',
+            url : '{% if coll_id %}{% url elfinder_connector coll_id %}{% else %}{% url elfinder_connector %}{% endif %}',
             places : 'h',
             rememberLastDir : false,
             placesFirst : false,
             requestType: 'post',
             customData : { csrfmiddlewaretoken : '{{ csrf_token }}',  },
-            uiOptions : { toolbar : [ 
+            uiOptions : { toolbar : [
                             ['back', 'forward'],
                             ['download', 'mkdir', 'mkfile', 'upload'],
                             ['copy', 'cut', 'paste'],
@@ -134,7 +134,7 @@
                                      'copy', 'cut', 'paste', '|',
                                      'rm', 'rename'],
                           }
-        }).elfinder('instance');            
+        }).elfinder('instance');
         });
     </script>
     {% endblock elfinder_init %}

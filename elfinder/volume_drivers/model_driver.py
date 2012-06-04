@@ -15,7 +15,8 @@ class ModelVolumeDriver(BaseVolumeDriver):
                  directory_model=models.Directory,
                  file_model=models.File,
                  *args, **kwargs):
-
+        if collection_id is None:
+            raise ValueError(u"collection_id must me specified for ModelVolumeDriver")
         super(ModelVolumeDriver, self).__init__(*args, **kwargs)
         self.collection_model = collection_model
         self.directory_model = directory_model
@@ -207,7 +208,7 @@ class ModelVolumeDriver(BaseVolumeDriver):
         """ For now, this uses a very naive way of storing files - the entire
             file is read in to the File model's content field in one go.
 
-            This should be updated to use read_chunks to add the file one 
+            This should be updated to use read_chunks to add the file one
             chunk at a time.
         """
         added = []
