@@ -26,5 +26,11 @@ class LazySettings(LazyObject):
             user_settings.MEDIA_URL
         )
 
+        # special settings for TinyMCE connector
+        self.ELFINDER_TINYMCE_PATH_TO_POPUP_JS = getattr(
+            user_settings, "ELFINDER_TINYMCE_PATH_TO_POPUP_JS",
+            None
+        )
+
 
 settings = LazySettings()
