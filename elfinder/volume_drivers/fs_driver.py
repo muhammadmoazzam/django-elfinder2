@@ -39,7 +39,7 @@ class WrapperBase(object):
         return False
 
     def get_hash(self):
-        return u'%s_%s' % (self._real_hash(self.root)[0:2], self._real_hash(self.path))
+        return '%s_%s' % (self._real_hash(self.root)[0:2], self._real_hash(self.path))
 
     def get_parent_hash(self):
         if os.path.abspath(self.path) == os.path.abspath(self.root):
@@ -48,11 +48,11 @@ class WrapperBase(object):
         return DirectoryWrapper(parent_path, self.root).get_hash()
 
     def _real_hash(self, path):
-        path = u'%s' % path
+        path = '%s' % path
         enc_path = path.encode('utf8')
         m = hashlib.md5()
         m.update(enc_path)
-        return unicode(m.hexdigest())
+        return str(m.hexdigest())
 
 
 class FileWrapper(WrapperBase):
@@ -136,7 +136,7 @@ class FileWrapper(WrapperBase):
 
     def get_url(self):
         rel_path = os.path.relpath(self.path, self.root).replace('\\', '/')
-        return u'%s%s' % (elfinder_settings.ELFINDER_FS_DRIVER_URL, rel_path)
+        return '%s%s' % (elfinder_settings.ELFINDER_FS_DRIVER_URL, rel_path)
 
     def get_mime(self, path):
         mime = mimes.guess_type(path)[0] or 'Unknown'
@@ -155,7 +155,7 @@ class FileWrapper(WrapperBase):
             f.close()
             return cls(file_path, root)
         else:
-            raise Exception(u"File '%s' already exists" % os.path.basename(file_path))
+            raise Exception("File '%s' already exists" % os.path.basename(file_path))
 
 
 class DirectoryWrapper(WrapperBase):
@@ -223,7 +223,7 @@ class DirectoryWrapper(WrapperBase):
             os.makedirs(dir_path)
             return cls(dir_path, root)
         else:
-            raise Exception(u"Directory '%s' already exists" % os.path.basename(dir_path))
+            raise Exception("Directory '%s' already exists" % os.path.basename(dir_path))
 
 
 class FileSystemVolumeDriver(BaseVolumeDriver):
@@ -326,7 +326,7 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
 
     def _find_path(self, fhash, root=None, resolution=False):
         if root is None:
-            root = u'%s' % self.root
+            root = '%s' % self.root
         final_path = None
 
         if not fhash:
@@ -342,7 +342,7 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
                     final_path = f
                     if resolution:
                         try:
-                            final_path = unicode(final_path, 'utf8')
+                            final_path = str(final_path, 'utf8')
                         except:
                             pass
                     return final_path
@@ -354,7 +354,7 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
                     final_path = d
                     if resolution:
                         try:
-                            final_path = unicode(final_path, 'utf8')
+                            final_path = str(final_path, 'utf8')
                         except:
                             pass
                     return final_path
@@ -365,7 +365,7 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
                 final_path = d
                 if resolution:
                     try:
-                        final_path = unicode(final_path, 'utf8')
+                        final_path = str(final_path, 'utf8')
                     except:
                         pass
                 return final_path

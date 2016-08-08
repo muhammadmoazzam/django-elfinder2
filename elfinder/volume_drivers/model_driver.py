@@ -16,7 +16,7 @@ class ModelVolumeDriver(BaseVolumeDriver):
                  file_model=models.File,
                  *args, **kwargs):
         if collection_id is None:
-            raise ValueError(u"collection_id must me specified for ModelVolumeDriver")
+            raise ValueError("collection_id must me specified for ModelVolumeDriver")
         super(ModelVolumeDriver, self).__init__(*args, **kwargs)
         self.collection_model = collection_model
         self.directory_model = directory_model
@@ -122,7 +122,7 @@ class ModelVolumeDriver(BaseVolumeDriver):
                         collection=self.collection)
         try:
             new_obj.validate_unique()
-        except ValidationError, e:
+        except ValidationError as e:
             logger.exception(e)
             raise Exception("\n".join(e.messages))
 
@@ -220,7 +220,7 @@ class ModelVolumeDriver(BaseVolumeDriver):
                                        content=upload.read())
             try:
                 new_file.validate_unique()
-            except ValidationError, e:
+            except ValidationError as e:
                 logger.exception(e)
                 raise Exception("\n".join(e.messages))
 

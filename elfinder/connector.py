@@ -3,6 +3,7 @@ from elfinder.models import FileCollection, Directory, File
 import logging
 import traceback
 import sys
+import collections
 
 
 """ Connector class for Django/elFinder integration.
@@ -121,13 +122,13 @@ class ElFinderConnector():
             return
 
         func = getattr(self, '_' + self.__class__.__name__ + func_name, None)
-        if not callable(func):
+        if not isinstance(func, collections.Callable):
             self.response['error'] = 'Command failed'
             return
 
         try:
             func()
-        except Exception, e:
+        except Exception as e:
             self.response['error'] = '%s' % e
             logger.exception(e)
 
@@ -243,7 +244,7 @@ class ElFinderConnector():
             # opened volumes.
 
             # Assume the first volume's root is the currently open directory.
-            volume = self.volumes.itervalues().next()
+            volume = next(iter(self.volumes.values()))
             self.response['cwd'] = volume.get_info('')
 
             # Add relevant tree information for each volume

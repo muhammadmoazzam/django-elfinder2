@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'django-elfinder'
-copyright = u'2011, Mike Ryan'
+project = 'django-elfinder'
+copyright = '2011, Mike Ryan'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -178,8 +178,8 @@ htmlhelp_basename = 'django-elfinderdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django-elfinder.tex', u'django-elfinder Documentation',
-   u'Mike Ryan', 'manual'),
+  ('index', 'django-elfinder.tex', 'django-elfinder Documentation',
+   'Mike Ryan', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -211,6 +211,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'django-elfinder', u'django-elfinder Documentation',
-     [u'Mike Ryan'], 1)
+    ('index', 'django-elfinder', 'django-elfinder Documentation',
+     ['Mike Ryan'], 1)
 ]
