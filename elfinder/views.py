@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.utils import simplejson as json
+import json
 from django.template import RequestContext
 from elfinder.connector import ElFinderConnector
 from elfinder.models import FileCollection
