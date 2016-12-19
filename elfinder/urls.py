@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import url
 from elfinder.views import index, connector_view
 from elfinder.views_tinymce import tinymce_filebrowser_script_view, tinymce_filebrowser_dialog_view
 
