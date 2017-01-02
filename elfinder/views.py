@@ -36,7 +36,7 @@ def connector_view(request, coll_id=None):
     if finder.return_view:
         return finder.return_view
 
-    response = HttpResponse(mimetype=finder.httpHeader['Content-type'])
+    response = HttpResponse(content_type=finder.httpHeader['Content-type'])
     response.status_code = finder.httpStatusCode
     if finder.httpHeader['Content-type'] == 'application/json':
         response.content = json.dumps(finder.httpResponse)
