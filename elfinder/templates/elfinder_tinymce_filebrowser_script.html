@@ -1,5 +1,5 @@
 function elFinderBrowser (field_name, url, type, win) {
-    var elfinder_url = '{% url elfinder_tinymce_filebrowser_dialog %}';    // use an absolute path!
+    var elfinder_url = '{% url "elfinder_tinymce_filebrowser_dialog" %}';    // use an absolute path!
     tinyMCE.activeEditor.windowManager.open({
         file: elfinder_url,
         title: 'elFinder 2.0',
