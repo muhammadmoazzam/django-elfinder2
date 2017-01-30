@@ -91,7 +91,7 @@ class FileWrapper(WrapperBase):
         if self._file is not None:
             self._file.close()
             self._file = None
-        _file = File(open(self.path, "w"))
+        _file = File(open(self.path, "ab"))
         _file.write(data)
         _file.close()
 
