@@ -136,7 +136,8 @@ class FileWrapper(WrapperBase):
 
     def get_url(self):
         rel_path = os.path.relpath(self.path, self.root).replace('\\', '/')
-        return '%s%s' % (elfinder_settings.ELFINDER_FS_DRIVER_URL, rel_path)
+        user_path = '%s/' % (self.root.split('/')[-1],)
+        return '%s%s%s' % (elfinder_settings.ELFINDER_FS_DRIVER_URL, user_path, rel_path)
 
     def get_mime(self, path):
         mime = mimes.guess_type(path)[0] or 'Unknown'
