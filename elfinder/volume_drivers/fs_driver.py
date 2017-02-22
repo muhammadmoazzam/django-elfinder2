@@ -302,7 +302,29 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
         return dir_list
 
     def paste(self, targets, source, dest, cut):
-        pass  # TODO
+        """ Moves/copies target files/directories from source to dest. """
+        # source_dir = self._get_path_object(source)
+        dest_dir = self._get_path_object(self._find_path(dest))
+        added = []
+        removed = []
+        if dest_dir.is_dir():
+            for target in targets:
+                orig_abs_path = self._find_path(target)
+                orig_obj = self._get_path_object(orig_abs_path)
+                new_abs_path = safe_join(self.root, dest_dir.get_path(), os.path.basename(orig_abs_path))
+                if cut:
+                    _fnc = shutil.move
+                    removed.append(orig_obj.get_info()['hash'])
+                else:
+                    if orig_obj.is_dir():
+                        _fnc = shutil.copytree
+                    else:
+                        _fnc = shutil.copy
+                _fnc(orig_abs_path, new_abs_path)
+                added.append(self._get_path_info(new_abs_path))
+
+        return {"added": added,
+                "removed": removed}
 
     def remove(self, target):
         obj = self._get_path_object(self._find_path(target))
