@@ -1964,7 +1964,7 @@ var elFinder = function(node, opts) {
 				return parents;
 			};
 		
-		if (! onlydir && self.api >= 2) {
+		if (! onlydir) {
 			(cwd !== this.root()) && opts.push(this.request({
 				data           : {cmd : 'parents', target : cwd},
 				preventDefault : true
@@ -2011,10 +2011,7 @@ var elFinder = function(node, opts) {
 			}
 			
 			if (self.api < 2.1) {
-				if (! pdata.tree) {
-					pdata.tree = [];
-				}
-				pdata.tree.push(odata.cwd);
+				pdata.tree = (pdata.tree || []).push(odata.cwd);
 			}
 			
 			// data normalize
@@ -5092,6 +5089,15 @@ elFinder.prototype = {
 																return data.hashes['/' + p];
 															}
 														});
+													} else if (data.added) {
+														target = data.added[0].hash;
+														// paths = $.map(paths.concat(), function(p) {
+														// 	if (p === '') {
+														// 		return target;
+														// 	} else {
+														// 		return data.added[0];
+														// 	}
+														// });
 													}
 												})
 												.always(function(data) {
