@@ -80,7 +80,7 @@ class ElFinderConnector():
         """
         return ['cmd', 'target', 'targets[]', 'current', 'tree',
                 'name', 'content', 'src', 'dst', 'cut', 'init',
-                'type', 'width', 'height', 'upload[]']
+                'type', 'width', 'height', 'upload[]', 'dirs[]']
 
     def get_volume(self, hash):
         """ Returns the volume which contains the file/dir represented by the
@@ -157,6 +157,8 @@ class ElFinderConnector():
             if field in data_source:
                 if field == "targets[]":
                     self.data[field] = data_source.getlist(field)
+                elif field == "dirs[]":
+                    self.data['name'] = data_source.getlist(field)[0]
                 else:
                     self.data[field] = data_source[field]
 
