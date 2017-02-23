@@ -30,6 +30,7 @@ class ElFinderConnector():
         self.data = {}
         self.response = {}
         self.return_view = None
+        self.is_return_view = False
 
         # Populate the volumes dict, using volume_id as the key
         self.volumes = {}
@@ -216,6 +217,7 @@ class ElFinderConnector():
         # A file was requested, so set return_view to the read_file view.
         #self.return_view = self.read_file_view(self.request, volume, target)
         self.return_view = volume.read_file_view(self.request, target)
+        self.is_return_view = True
 
     def __open(self):
         """ Handles the 'open' command.

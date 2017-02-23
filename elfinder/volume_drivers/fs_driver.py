@@ -81,6 +81,11 @@ class FileWrapper(WrapperBase):
     def name(self):
         return self._file.name
 
+    def get_chunks(self):
+        if self._file is None:
+            self._file = File(open(self.path, 'rb'))
+        return self._file.chunks()
+
     def get_contents(self):
         if self._file is None:
             self._file = File(open(self.path))
@@ -273,9 +278,13 @@ class FileSystemVolumeDriver(BaseVolumeDriver):
 
     def read_file_view(self, request, hash):
         file_path = self._find_path(hash)
-        return render_to_response('read_file.html',
-                                  {'file': FileWrapper(file_path)},
-                                  RequestContext(request))
+        from django.http import HttpResponse
+        resp = HttpResponse(content_type='application/force-download')
+        file = FileWrapper(file_path, self.root)
+        for chunk in file.get_chunks():
+            resp.write(chunk)
+
+        return resp
 
     def mkdir(self, name, parent):
         parent_path = self._find_path(parent)
