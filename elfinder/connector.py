@@ -4,6 +4,8 @@ import logging
 import traceback
 import sys
 import collections
+import os
+import patoolib
 
 
 """ Connector class for Django/elFinder integration.
@@ -59,6 +61,9 @@ class ElFinderConnector():
                 'rename': ('__rename', {'target': True, 'name': True}),
                 'rm': ('__remove', {'targets[]': True}),
                 'upload': ('__upload', {'target': True}),
+                'extract': ('__extract', {'target': True}),
+                'archive': ('__archive', {'target': True, 'targets[]': True,
+                                          'name': True, 'type': True}),
                }
 
     def get_init_params(self):
@@ -71,8 +76,13 @@ class ElFinderConnector():
                 'uplMaxSize': '128M',
                 'options': {'separator': '/',
                             'disabled': [],
-                            'archivers': {'create': [],
-                                          'extract': []},
+                            'archivers': {"create": [
+                                "application/zip",
+                            ],
+                            "extract": [
+                                "application/rar",
+                                "application/zip",
+                            ]},
                             'copyOverwrite': 1}
                }
 
@@ -301,6 +311,49 @@ class ElFinderConnector():
         if source_volume != dest_volume:
             raise Exception('Moving between volumes is not supported.')
         self.response.update(dest_volume.paste(targets, source, dest, cut))
+
+    def __archive(self):
+        target = self.data['target']
+        targets = self.data['targets[]']
+        name = self.data['name']
+        type = self.data['type']
+        source_volume = self.get_volume(target)
+        abs_path = source_volume.get_info(target).get('abs_path')
+        type_map = {
+            "application/x-tar": 'tar',
+            "application/zip": 'zip',
+        }
+        if abs_path:
+            zipfile = os.path.join(abs_path, "{}.{}".format(name, type_map[type]))
+            files = []
+            added = []
+            for trg in targets:
+                orig_abs_path = source_volume._find_path(trg)
+                files.append(orig_abs_path)
+
+            patoolib.create_archive(zipfile, files)
+        for node in source_volume.get_tree(target):
+            if node['abs_path'] == zipfile:
+                added.append(node)
+        self.response.update({"added": added})
+
+    def __extract(self):
+        target = self.data['target']
+        source_volume = self.get_volume(target)
+        archive_file = source_volume.get_info(target)
+        archive_name = archive_file.get('abs_path').split('/')[-1].split('.')[0]
+        folder_path = os.path.join(
+            source_volume.get_info(archive_file.get('phash')).get('abs_path'),
+            archive_name
+        )
+        self.get_volume(archive_file.get('phash')).mkdir(archive_name, archive_file.get('phash'))
+        patoolib.extract_archive(archive_file.get('abs_path'), outdir=folder_path, interactive=False)
+        added = []
+        for node in source_volume.get_tree(archive_file.get('phash')):
+            if node['abs_path'] == folder_path:
+                added.append(node)
+
+        self.response.update({"added": added})
 
     def __remove(self):
         targets = self.data['targets[]']
