@@ -318,7 +318,7 @@ class ElFinderConnector():
         name = self.data['name']
         type = self.data['type']
         source_volume = self.get_volume(target)
-        abs_path = source_volume.get_info(target).get('abs_path')
+        abs_path = source_volume._find_path(target)
         type_map = {
             "application/x-tar": 'tar',
             "application/zip": 'zip',
@@ -332,8 +332,9 @@ class ElFinderConnector():
                 files.append(orig_abs_path)
 
             patoolib.create_archive(zipfile, files)
+
         for node in source_volume.get_tree(target):
-            if node['abs_path'] == zipfile:
+            if source_volume._find_path(node['hash']) == zipfile:
                 added.append(node)
         self.response.update({"added": added})
 
@@ -341,16 +342,17 @@ class ElFinderConnector():
         target = self.data['target']
         source_volume = self.get_volume(target)
         archive_file = source_volume.get_info(target)
-        archive_name = archive_file.get('abs_path').split('/')[-1].split('.')[0]
+        archive_file_path = source_volume._find_path(target)
+        archive_name = archive_file_path.split('/')[-1].split('.')[0]
         folder_path = os.path.join(
-            source_volume.get_info(archive_file.get('phash')).get('abs_path'),
+            source_volume._find_path(archive_file.get('phash')),
             archive_name
         )
         self.get_volume(archive_file.get('phash')).mkdir(archive_name, archive_file.get('phash'))
-        patoolib.extract_archive(archive_file.get('abs_path'), outdir=folder_path, interactive=False)
+        patoolib.extract_archive(archive_file_path, outdir=folder_path, interactive=False)
         added = []
         for node in source_volume.get_tree(archive_file.get('phash')):
-            if node['abs_path'] == folder_path:
+            if source_volume._find_path(node['hash']) == folder_path:
                 added.append(node)
 
         self.response.update({"added": added})
